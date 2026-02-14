@@ -24,7 +24,7 @@ public class SendGridEmailAdapter implements EmailProviderPort {
     public DeliveryResult send(List<Recipient> recipients, EmailPayload payload) {
         // Simulación: podrías “fallar” si apiKey está vacía, por ejemplo.
         if (config.apiKey() == null || config.apiKey().isBlank()) {
-            throw new DeliveryException("SendGrid: apiKey inválida");
+            throw new IllegalArgumentException("SendGrid: apiKey inválida");
         }
 
         // Simular un ID de mensaje del proveedor

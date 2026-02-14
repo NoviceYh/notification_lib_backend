@@ -117,7 +117,7 @@ class EmailValidatorTest {
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> emailValidator.validate(recipients, null));
 
-        assertEquals(ValidationErrorCode.PAYLOAD_EMPTY, ex.getErrorCode());
+        assertEquals(ValidationErrorCode.EMAIL_PAYLOAD_INVALID, ex.getErrorCode());
     }
 
     @Test

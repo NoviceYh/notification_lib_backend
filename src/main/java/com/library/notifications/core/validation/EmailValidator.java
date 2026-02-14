@@ -44,7 +44,7 @@ public class EmailValidator {
 
     private void payloadValidation(EmailPayload payload) {
         if (payload == null) {
-            throw new ValidationException(PAYLOAD_EMPTY);
+            throw new ValidationException(EMAIL_PAYLOAD_INVALID);
         }
         if (payload.subject() == null || payload.subject().isBlank()) {
             throw new ValidationException(SUBJECT_EMPTY);

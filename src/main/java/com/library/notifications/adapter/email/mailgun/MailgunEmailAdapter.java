@@ -1,6 +1,5 @@
 package com.library.notifications.adapter.email.mailgun;
 
-import com.library.notifications.api.exception.DeliveryException;
 import com.library.notifications.api.model.DeliveryResult;
 import com.library.notifications.api.model.EmailPayload;
 import com.library.notifications.api.model.Recipient;
@@ -22,7 +21,7 @@ public class MailgunEmailAdapter implements EmailProviderPort {
     @Override
     public DeliveryResult send(List<Recipient> recipients, EmailPayload payload) {
         if (config.apiKey() == null || config.apiKey().isBlank()) {
-            throw new DeliveryException("Mailgun: apiKey inválida");
+            throw new IllegalArgumentException("Mailgun: apiKey inválida");
         }
 
         String providerMessageId = "mg-" + UUID.randomUUID();

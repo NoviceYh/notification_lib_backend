@@ -8,7 +8,9 @@ public enum ValidationErrorCode {
     EMAIL_INVALID_FORMAT("EV-0004", "Email has an invalid format"),
     SUBJECT_EMPTY("EV-0005", "The email subject cannot be empty"),
     BODY_EMPTY("EV-0006", "The email body cannot be empty"),
-    PAYLOAD_EMPTY("EV-0007", "The email payload cannot be null");
+    EMAIL_PAYLOAD_INVALID("EV-0007", "The email payload cannot be null"),
+    REQUEST_NULL("EV-0008", "The notification request cannot be null"),
+    INVALID_CHANNEL("EV-0009", "Invalid channel");
 
     private final String code;
     private final String description;
