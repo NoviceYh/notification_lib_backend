@@ -24,6 +24,7 @@ public class MailgunEmailAdapter implements EmailProviderPort {
             throw new IllegalArgumentException("Mailgun: apiKey inválida");
         }
 
+        // Simulate a provider message ID
         String providerMessageId = "mg-" + UUID.randomUUID();
 
         return DeliveryResult.success(

@@ -1,6 +1,5 @@
 package com.library.notifications.adapter.email.sendgrid;
 
-
 import com.library.notifications.api.exception.DeliveryException;
 import com.library.notifications.api.model.DeliveryResult;
 import com.library.notifications.api.model.EmailPayload;
@@ -12,22 +11,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.library.notifications.api.exception.error.DeliveryErrorCode.PROVIDER_AUTH_ERROR;
+
 public class SendGridEmailAdapter implements EmailProviderPort {
 
     private final SendGridConfig config;
 
     public SendGridEmailAdapter(SendGridConfig config) {
-        this.config = Objects.requireNonNull(config, "config es obligatoria");
+        this.config = Objects.requireNonNull(config, "config is required");
     }
 
     @Override
     public DeliveryResult send(List<Recipient> recipients, EmailPayload payload) {
-        // Simulación: podrías “fallar” si apiKey está vacía, por ejemplo.
         if (config.apiKey() == null || config.apiKey().isBlank()) {
-            throw new IllegalArgumentException("SendGrid: apiKey inválida");
+            throw new DeliveryException(PROVIDER_AUTH_ERROR);
         }
 
-        // Simular un ID de mensaje del proveedor
+        // Simulate a provider message ID
         String providerMessageId = "sg-" + UUID.randomUUID();
 
         return DeliveryResult.success(
