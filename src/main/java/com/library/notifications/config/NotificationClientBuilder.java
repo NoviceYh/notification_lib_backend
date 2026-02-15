@@ -15,7 +15,7 @@ import java.util.List;
 public class NotificationClientBuilder {
 
     private EmailProviderPort emailProviderPort;
-    private EmailValidator emailValidator = new EmailValidator(); // default
+    private EmailValidator emailValidator = new EmailValidator();
 
     public static NotificationClientBuilder builder() {
         return new NotificationClientBuilder();

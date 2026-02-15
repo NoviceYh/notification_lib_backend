@@ -9,15 +9,16 @@ import com.library.notifications.api.model.NotificationRequest;
 public interface ChannelSender {
 
     /**
-     * @return el canal que este sender soporta (EMAIL, SMS, PUSH)
+     * @return the channel this sender is responsible for (e.g., EMAIL, SMS, PUSH)
      */
     Channel channel();
 
     /**
-     * Envía la notificación del canal correspondiente.
+     * Send a notification request through the appropriate channel.
+     * The implementation should handle validation and delivery logic specific to the channel.
      *
-     * @throws ValidationException si la request/payload es inválida
-     * @throws DeliveryException si el proveedor falla al enviar
+     * @throws ValidationException if the request is invalid for this channel (e.g., missing email address for EMAIL channel)
+     * @throws DeliveryException if there is an error during the delivery process (e.g., provider API failure)
      */
     DeliveryResult send(NotificationRequest request);
 }

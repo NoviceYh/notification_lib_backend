@@ -10,7 +10,10 @@ public enum ValidationErrorCode {
     BODY_EMPTY("EV-0006", "The email body cannot be empty"),
     EMAIL_PAYLOAD_INVALID("EV-0007", "The email payload cannot be null"),
     REQUEST_NULL("EV-0008", "The notification request cannot be null"),
-    INVALID_CHANNEL("EV-0009", "Invalid channel");
+    INVALID_CHANNEL("EV-0009", "Invalid channel"),
+    SENDER_NOT_CONFIGURED("EV-0010", "No ChannelSender configured for "),
+    SENDERS_NULL("EV-0011", "The list of ChannelSenders cannot be null"),
+    DUPLICATE_SENDER_FOR_CHANNEL("EV-0012", "More than one ChannelSender registered for");
 
     private final String code;
     private final String description;

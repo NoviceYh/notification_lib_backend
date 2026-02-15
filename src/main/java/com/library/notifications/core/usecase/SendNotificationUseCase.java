@@ -12,18 +12,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.library.notifications.api.exception.error.ValidationErrorCode.*;
+
 public class SendNotificationUseCase implements NotificationService {
 
     private final Map<Channel, ChannelSender> senderByChannel;
 
     public SendNotificationUseCase(List<ChannelSender> senders) {
-        Objects.requireNonNull(senders, "senders es obligatorio");
+        if (senders == null) {
+            throw new ValidationException(SENDERS_NULL);
+        }
 
         EnumMap<Channel, ChannelSender> map = new EnumMap<>(Channel.class);
         for (ChannelSender sender : senders) {
-            Channel channel = Objects.requireNonNull(sender.channel(), "sender.channel() no puede ser null");
+            Channel channel = Objects.requireNonNull(sender.channel(), "sender.channel() cannot be null");
             if (map.containsKey(channel)) {
-                throw new IllegalArgumentException("Hay más de un ChannelSender registrado para " + channel);
+                throw new ValidationException(DUPLICATE_SENDER_FOR_CHANNEL, channel.name());
             }
             map.put(channel, sender);
         }
@@ -32,12 +36,12 @@ public class SendNotificationUseCase implements NotificationService {
 
     @Override
     public DeliveryResult send(NotificationRequest request) {
-        if (request == null) throw new IllegalArgumentException("La notificación no puede ser null");
-        if (request.channel() == null) throw new IllegalArgumentException("El channel es obligatorio");
+        if (request == null) throw new ValidationException(REQUEST_NULL);
+        if (request.channel() == null) throw new ValidationException(INVALID_CHANNEL);
 
         ChannelSender sender = senderByChannel.get(request.channel());
         if (sender == null) {
-            throw new IllegalArgumentException("No hay sender configurado para channel " + request.channel());
+            throw new ValidationException(SENDER_NOT_CONFIGURED, request.channel().name());
         }
         return sender.send(request);
     }
