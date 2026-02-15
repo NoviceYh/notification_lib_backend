@@ -26,7 +26,13 @@ public enum ValidationErrorCode {
     SMS_MESSAGE_EMPTY("EV-0016", "The SMS message cannot be empty"),
     SMS_MESSAGE_TOO_LONG("EV-0017", "The SMS message exceeds the maximum allowed"),
 
-    NO_SENDERS_CONFIGURED("EV-0018", "No ChannelSenders configured in the system");
+    NO_SENDERS_CONFIGURED("EV-0018", "No ChannelSenders configured in the system"),
+
+    // === Push validation errors ===
+    PUSH_RECIPIENT_NULL_OR_BLANK("EV-0019", "Push recipient cannot be null or empty"),
+    PUSH_PAYLOAD_INVALID("EV-0021", "The Push payload cannot be null"),
+    PUSH_TITLE_EMPTY("EV-0022", "The Push title cannot be empty"),
+    PUSH_MESSAGE_EMPTY("EV-0023", "The Push message cannot be empty");
 
     private final String code;
     private final String description;

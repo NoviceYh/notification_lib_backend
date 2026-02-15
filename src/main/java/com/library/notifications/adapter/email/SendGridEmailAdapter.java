@@ -1,5 +1,6 @@
-package com.library.notifications.adapter.email.mailgun;
+package com.library.notifications.adapter.email;
 
+import com.library.notifications.api.exception.DeliveryException;
 import com.library.notifications.api.model.DeliveryResult;
 import com.library.notifications.api.model.EmailPayload;
 import com.library.notifications.api.model.Recipient;
@@ -10,29 +11,32 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class MailgunEmailAdapter implements EmailProviderPort {
+import static com.library.notifications.api.exception.error.DeliveryErrorCode.PROVIDER_AUTH_ERROR;
 
-    private final MailgunConfig config;
+public class SendGridEmailAdapter implements EmailProviderPort {
 
-    public MailgunEmailAdapter(MailgunConfig config) {
-        this.config = Objects.requireNonNull(config, "config es obligatoria");
+    private final SendGridConfig config;
+
+    public SendGridEmailAdapter(SendGridConfig config) {
+        this.config = Objects.requireNonNull(config, "config is required");
     }
 
     @Override
     public DeliveryResult send(List<Recipient> recipients, EmailPayload payload) {
         if (config.apiKey() == null || config.apiKey().isBlank()) {
-            throw new IllegalArgumentException("Mailgun: apiKey inválida");
+            throw new DeliveryException(PROVIDER_AUTH_ERROR);
         }
 
         // Simulate a provider message ID
-        String providerMessageId = "mg-" + UUID.randomUUID();
+        String providerMessageId = "sg-" + UUID.randomUUID();
 
         return DeliveryResult.success(
-                "mailgun",
+                "sendgrid",
                 providerMessageId,
                 Instant.now()
         );
     }
 
-    public record MailgunConfig(String apiKey, String domain) {}
+    public record SendGridConfig(String apiKey) {}
+
 }

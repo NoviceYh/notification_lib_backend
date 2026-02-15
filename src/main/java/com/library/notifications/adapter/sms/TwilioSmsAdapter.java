@@ -1,4 +1,4 @@
-package com.library.notifications.adapter.sms.twilio;
+package com.library.notifications.adapter.sms;
 
 import com.library.notifications.api.exception.DeliveryException;
 import com.library.notifications.api.model.DeliveryResult;
