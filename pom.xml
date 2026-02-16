@@ -24,8 +24,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>2.0.13</version>
         </dependency>
-
-        <!-- logging impl solo para tests -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
