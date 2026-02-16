@@ -79,12 +79,12 @@ class PushChannelSenderTest {
     }
 
     @Test
-    void send_shouldThrowValidationException_whenPayloadIsInvalid() {
+    void send_shouldThrowValidationException_whenPayloadIsEmpty() {
         List<Recipient> recipients = List.of(new Recipient("testPushRecipient"));
         NotificationRequest request = new NotificationRequest(Channel.PUSH, recipients, null);
 
         ValidationException ex = assertThrows(ValidationException.class, () -> pushChannelSender.send(request));
-        assertEquals(ValidationErrorCode.PUSH_PAYLOAD_INVALID, ex.getErrorCode());
+        assertEquals(ValidationErrorCode.PUSH_PAYLOAD_EMPTY, ex.getErrorCode());
         verifyNoInteractions(pushValidator, pushProviderPort);
     }
 
