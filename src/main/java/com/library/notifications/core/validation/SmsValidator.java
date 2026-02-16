@@ -50,7 +50,7 @@ public class SmsValidator {
                 throw new ValidationException(SMS_RECIPIENT_NULL_OR_BLANK);
             }
             if (!SMS_PATTERN.matcher(sms).matches()) {
-                throw new ValidationException(SMS_INVALID_FORMAT, "Invalid SMS recipient: " + sms);
+                throw new ValidationException(SMS_INVALID_FORMAT, sms);
             }
         }
     }
@@ -64,7 +64,7 @@ public class SmsValidator {
             throw new ValidationException(SMS_MESSAGE_EMPTY);
         }
         if (message.length() > MAX_SMS_LENGTH) {
-            throw new ValidationException(SMS_MESSAGE_TOO_LONG, ". Length: " + message.length() + ", max: " + MAX_SMS_LENGTH);
+            throw new ValidationException(SMS_MESSAGE_TOO_LONG, String.valueOf(message.length()), String.valueOf(MAX_SMS_LENGTH));
         }
     }
 }

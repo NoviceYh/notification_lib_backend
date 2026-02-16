@@ -20,8 +20,10 @@ import com.library.notifications.core.validation.SmsValidator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import static com.library.notifications.api.exception.error.ValidationErrorCode.NO_SENDERS_CONFIGURED;
+import static java.util.concurrent.ForkJoinPool.commonPool;
 
 public class NotificationClientBuilder {
 
@@ -32,31 +34,33 @@ public class NotificationClientBuilder {
     private PushProviderPort pushProviderPort;
     private PushValidator pushValidator = new PushValidator();
 
+    private Executor asyncExecutor;
+
     public static NotificationClientBuilder builder() {
         return new NotificationClientBuilder();
     }
 
     // Choose email provider
-    public NotificationClientBuilder useSendGrid(String apiKey) {
-        this.emailProviderPort = new SendGridEmailAdapter(new SendGridEmailAdapter.SendGridConfig(apiKey));
+    public NotificationClientBuilder useSendGrid(String apiKey, String fromEmail) {
+        this.emailProviderPort = new SendGridEmailAdapter(new SendGridEmailAdapter.SendGridConfig(apiKey, fromEmail));
         return this;
     }
 
-    public NotificationClientBuilder useMailgun(String apiKey, String domain) {
-        this.emailProviderPort = new MailgunEmailAdapter(new MailgunEmailAdapter.MailgunConfig(apiKey, domain));
+    public NotificationClientBuilder useMailgun(String apiKey, String domain, String fromEmail) {
+        this.emailProviderPort = new MailgunEmailAdapter(new MailgunEmailAdapter.MailgunConfig(apiKey, domain, fromEmail));
         return this;
     }
 
     // Choose SMS provider
-    public NotificationClientBuilder useTwilio(String accountSid, String authToken) {
-        this.smsProviderPort = new TwilioSmsAdapter(new TwilioSmsAdapter.TwilioConfig(accountSid, authToken));
+    public NotificationClientBuilder useTwilio(String accountSid, String authToken, String fromPhoneNumber) {
+        this.smsProviderPort = new TwilioSmsAdapter(new TwilioSmsAdapter.TwilioConfig(accountSid, authToken, fromPhoneNumber));
         return this;
     }
 
     // Choose Push provider
-    public NotificationClientBuilder useFirebasePush(String projectId, String serviceAccountKey) {
+    public NotificationClientBuilder useFirebasePush(String projectId, String serviceAccountCredentials) {
         this.pushProviderPort =
-                new FirebasePushAdapter(new FirebasePushAdapter.FirebaseConfig(projectId, serviceAccountKey));
+                new FirebasePushAdapter(new FirebasePushAdapter.FirebaseConfig(projectId, serviceAccountCredentials));
         return this;
     }
 
@@ -73,6 +77,16 @@ public class NotificationClientBuilder {
         this.pushValidator = validator;
         return this;
     }
+
+    /**
+     * Configures the executor used for asynchronous notification delivery.
+     * If not set, ForkJoinPool.commonPool() is used.
+     */
+    public NotificationClientBuilder asyncExecutor(Executor executor) {
+        this.asyncExecutor = executor;
+        return this;
+    }
+
 
     public NotificationService build() {
         List<ChannelSender> senders = new ArrayList<>();
@@ -93,6 +107,10 @@ public class NotificationClientBuilder {
             throw new ValidationException(NO_SENDERS_CONFIGURED);
         }
 
-        return new SendNotificationUseCase(senders);
+        Executor executor = asyncExecutor != null
+                ? asyncExecutor
+                : commonPool();
+
+        return new SendNotificationUseCase(senders, executor);
     }
 }

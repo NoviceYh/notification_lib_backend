@@ -36,7 +36,7 @@ public class EmailChannelSender implements ChannelSender {
             throw new ValidationException(REQUEST_NULL);
         }
         if (request.channel() != Channel.EMAIL) {
-            throw new ValidationException(INVALID_CHANNEL, "Expected channel: EMAIL, but received: " + request.channel());
+            throw new ValidationException(INVALID_CHANNEL, Channel.EMAIL.name(), request.channel().name());
         }
 
         // 2) Validación y casteo del payload

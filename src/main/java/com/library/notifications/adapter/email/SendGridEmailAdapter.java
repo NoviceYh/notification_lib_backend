@@ -27,6 +27,15 @@ public class SendGridEmailAdapter implements EmailProviderPort {
             throw new DeliveryException(PROVIDER_AUTH_ERROR);
         }
 
+        // Simulate provider rejection (e.g. rate limit or blocked recipient)
+        if (recipients.size() > 50) {
+            return DeliveryResult.failed(
+                    "sendgrid",
+                    Instant.now(),
+                    "rate limited by provider"
+            );
+        }
+
         // Simulate a provider message ID
         String providerMessageId = "sg-" + UUID.randomUUID();
 
@@ -37,6 +46,6 @@ public class SendGridEmailAdapter implements EmailProviderPort {
         );
     }
 
-    public record SendGridConfig(String apiKey) {}
+    public record SendGridConfig(String apiKey, String fromEmail) {}
 
 }

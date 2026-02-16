@@ -34,10 +34,10 @@ public class EmailValidator {
                 throw new ValidationException(EMAIL_NULL_OR_BLANK);
             }
             if (email.contains("..")) {
-                throw new ValidationException(EMAIL_CONSECUTIVE_DOTS, "Invalid email: " + email);
+                throw new ValidationException(EMAIL_CONSECUTIVE_DOTS, email);
             }
             if (!EMAIL_PATTERN.matcher(email).matches()) {
-                throw new ValidationException(EMAIL_INVALID_FORMAT, "Invalid email: " + email);
+                throw new ValidationException(EMAIL_INVALID_FORMAT, email);
             }
         }
     }

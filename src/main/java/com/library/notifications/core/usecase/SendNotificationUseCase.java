@@ -11,6 +11,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool;
 
 import static com.library.notifications.api.exception.error.ValidationErrorCode.*;
 
@@ -18,7 +21,14 @@ public class SendNotificationUseCase implements NotificationService {
 
     private final Map<Channel, ChannelSender> senderByChannel;
 
+    private final Executor executor;
+
     public SendNotificationUseCase(List<ChannelSender> senders) {
+        this(senders, ForkJoinPool.commonPool());
+    }
+
+    public SendNotificationUseCase(List<ChannelSender> senders, Executor executor) {
+        this.executor = Objects.requireNonNull(executor, "executor cannot be null");
         if (senders == null) {
             throw new ValidationException(SENDERS_NULL);
         }
@@ -37,7 +47,7 @@ public class SendNotificationUseCase implements NotificationService {
     @Override
     public DeliveryResult send(NotificationRequest request) {
         if (request == null) throw new ValidationException(REQUEST_NULL);
-        if (request.channel() == null) throw new ValidationException(INVALID_CHANNEL);
+        if (request.channel() == null) throw new ValidationException(EMPTY_CHANNEL);
 
         ChannelSender sender = senderByChannel.get(request.channel());
         if (sender == null) {
@@ -45,4 +55,10 @@ public class SendNotificationUseCase implements NotificationService {
         }
         return sender.send(request);
     }
+
+    @Override
+    public CompletableFuture<DeliveryResult> sendAsync(NotificationRequest request) {
+        return CompletableFuture.supplyAsync(() -> send(request), executor);
+    }
+
 }

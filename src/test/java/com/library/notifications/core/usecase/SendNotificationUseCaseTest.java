@@ -128,5 +128,29 @@ class SendNotificationUseCaseTest {
         verifyNoMoreInteractions(emailSender);
     }
 
+    @Test
+    void sendAsync_shouldCompleteWithSameResultAsSend() {
+        ChannelSender emailSender = mock(ChannelSender.class);
+        when(emailSender.channel()).thenReturn(Channel.EMAIL);
+
+        NotificationService useCase = new SendNotificationUseCase(List.of(emailSender));
+
+        List<Recipient> recipients = List.of(new Recipient("asd"));
+        EmailPayload payload = new EmailPayload("Subject", "Body");
+        NotificationRequest request = new NotificationRequest(Channel.EMAIL, recipients, payload);
+
+        Instant now = Instant.now();
+        DeliveryResult expected = DeliveryResult.success("provider", "messageId", now);
+        when(emailSender.send(request)).thenReturn(expected);
+
+        assertDoesNotThrow(() -> {
+            DeliveryResult asyncResult = useCase.sendAsync(request).join();
+            assertSame(expected, asyncResult);
+            verify(emailSender).send(request);
+            verifyNoMoreInteractions(emailSender);
+        });
+
+    }
+
     public record DummyPayload(String content) implements NotificationPayload {}
 }

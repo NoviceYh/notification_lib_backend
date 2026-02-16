@@ -1,5 +1,6 @@
 package com.library.notifications.adapter.email;
 
+import com.library.notifications.api.exception.DeliveryException;
 import com.library.notifications.api.model.DeliveryResult;
 import com.library.notifications.api.model.EmailPayload;
 import com.library.notifications.api.model.Recipient;
@@ -9,6 +10,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
+import static com.library.notifications.api.exception.error.DeliveryErrorCode.PROVIDER_AUTH_ERROR;
 
 public class MailgunEmailAdapter implements EmailProviderPort {
 
@@ -21,7 +24,7 @@ public class MailgunEmailAdapter implements EmailProviderPort {
     @Override
     public DeliveryResult send(List<Recipient> recipients, EmailPayload payload) {
         if (config.apiKey() == null || config.apiKey().isBlank()) {
-            throw new IllegalArgumentException("Mailgun: apiKey inválida");
+            throw new DeliveryException(PROVIDER_AUTH_ERROR);
         }
 
         // Simulate a provider message ID
@@ -34,5 +37,5 @@ public class MailgunEmailAdapter implements EmailProviderPort {
         );
     }
 
-    public record MailgunConfig(String apiKey, String domain) {}
+    public record MailgunConfig(String apiKey, String domain, String fromEmail) {}
 }

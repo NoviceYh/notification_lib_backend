@@ -32,7 +32,7 @@ public class SmsChannelSender implements ChannelSender{
             throw new ValidationException(REQUEST_NULL);
         }
         if (request.channel() != Channel.SMS) {
-            throw new ValidationException(INVALID_CHANNEL, "Expected channel: SMS, but received: " + request.channel());
+            throw new ValidationException(INVALID_CHANNEL, Channel.SMS.name(), request.channel().name());
         }
 
         SmsPayload payload = extractSmsPayload(request);
@@ -49,11 +49,10 @@ public class SmsChannelSender implements ChannelSender{
 
     private SmsPayload extractSmsPayload(NotificationRequest request) {
         if (request.payload() == null) {
-            throw new ValidationException(SMS_PAYLOAD_INVALID);
+            throw new ValidationException(SMS_PAYLOAD_EMPTY);
         }
         if (!(request.payload() instanceof SmsPayload smsPayload)) {
-            throw new ValidationException(SMS_PAYLOAD_INVALID,
-                    "Expected SmsPayload but received: " + request.payload().getClass().getSimpleName());
+            throw new ValidationException(SMS_PAYLOAD_INVALID, request.payload().getClass().getSimpleName());
         }
         return smsPayload;
     }

@@ -93,8 +93,8 @@ class EmailValidatorTest {
                 () -> emailValidator.validate(recipients, payload));
 
         assertEquals(ValidationErrorCode.EMAIL_CONSECUTIVE_DOTS, ex.getErrorCode());
-        assertNotNull(ex.getDetails());
-        assertTrue(ex.getDetails().contains("john..doe@mail.com"));
+        assertNotNull(ex.getMessage());
+        assertTrue(ex.getMessage().contains("john..doe@mail.com"));
     }
 
     @Test
@@ -106,8 +106,8 @@ class EmailValidatorTest {
                 () -> emailValidator.validate(recipients, payload));
 
         assertEquals(ValidationErrorCode.EMAIL_INVALID_FORMAT, ex.getErrorCode());
-        assertNotNull(ex.getDetails());
-        assertTrue(ex.getDetails().contains("not-an-email"));
+        assertNotNull(ex.getMessage());
+        assertTrue(ex.getMessage().contains("not-an-email"));
     }
 
     @Test

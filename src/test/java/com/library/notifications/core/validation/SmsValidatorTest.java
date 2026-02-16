@@ -95,8 +95,8 @@ class SmsValidatorTest {
                 () -> smsValidator.validate(recipients, payload));
 
         assertEquals(ValidationErrorCode.SMS_INVALID_FORMAT, ex.getErrorCode());
-        assertNotNull(ex.getDetails());
-        assertTrue(ex.getDetails().contains("not-an-phone-number"));
+        assertNotNull(ex.getMessage());
+        assertTrue(ex.getMessage().contains("not-an-phone-number"));
     }
 
     @Test
@@ -139,8 +139,8 @@ class SmsValidatorTest {
                 () -> smsValidator.validate(recipients, payload));
 
         assertEquals(ValidationErrorCode.SMS_MESSAGE_TOO_LONG, ex.getErrorCode());
-            assertNotNull(ex.getDetails());
-            assertTrue(ex.getDetails().contains("Length: 161"));
+            assertNotNull(ex.getMessage());
+            assertTrue(ex.getMessage().contains("Length: 161"));
     }
 
 }

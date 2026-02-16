@@ -30,6 +30,15 @@ public class TwilioSmsAdapter implements SmsProviderPort {
             throw new DeliveryException(PROVIDER_AUTH_ERROR);
         }
 
+        // Simulate provider rejection (e.g. destination not reachable)
+        if (recipients.stream().anyMatch(r -> r.value().endsWith("000"))) {
+            return DeliveryResult.failed(
+                    "twilio",
+                    Instant.now(),
+                    "destination not reachable"
+            );
+        }
+
         // Simulate a provider message ID
         String providerMessageId = "tw-" + UUID.randomUUID();
 
@@ -40,5 +49,5 @@ public class TwilioSmsAdapter implements SmsProviderPort {
         );
     }
 
-    public record TwilioConfig(String accountSid, String authToken) {}
+    public record TwilioConfig(String accountSid, String authToken, String fromPhoneNumber) {}
 }

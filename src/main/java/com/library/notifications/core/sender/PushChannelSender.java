@@ -32,7 +32,7 @@ public class PushChannelSender implements ChannelSender {
             throw new ValidationException(REQUEST_NULL);
         }
         if (request.channel() != Channel.PUSH) {
-            throw new ValidationException(INVALID_CHANNEL, "Expected channel: PUSH, but received: " + request.channel());
+            throw new ValidationException(INVALID_CHANNEL, Channel.PUSH.name(), request.channel().name());
         }
 
         PushPayload payload = extractPushPayload(request);

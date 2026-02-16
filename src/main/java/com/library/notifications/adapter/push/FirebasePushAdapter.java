@@ -26,8 +26,17 @@ public class FirebasePushAdapter implements PushProviderPort {
         if (config.projectId() == null || config.projectId().isBlank()) {
             throw new DeliveryException(PROVIDER_AUTH_ERROR);
         }
-        if (config.serviceAccountKey() == null || config.serviceAccountKey().isBlank()) {
+        if (config.serviceAccountCredentials() == null || config.serviceAccountCredentials().isBlank()) {
             throw new DeliveryException(PROVIDER_AUTH_ERROR);
+        }
+
+        // Simulate rejected device token (not registered / expired)
+        if (recipients.stream().anyMatch(r -> r.value().contains("expired"))) {
+            return DeliveryResult.failed(
+                    "firebase",
+                    Instant.now(),
+                    "registration token not registered"
+            );
         }
 
         // Simulate a provider message ID
@@ -40,5 +49,5 @@ public class FirebasePushAdapter implements PushProviderPort {
         );
     }
 
-    public record FirebaseConfig(String projectId, String serviceAccountKey) {}
+    public record FirebaseConfig(String projectId, String serviceAccountCredentials) {}
 }

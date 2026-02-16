@@ -5,27 +5,20 @@ import com.library.notifications.api.exception.error.ValidationErrorCode;
 public class ValidationException extends RuntimeException {
 
     private final ValidationErrorCode errorCode;
-    private final String details;
+    private final String[] args;
 
-    public ValidationException(ValidationErrorCode errorCode) {
-        super(errorCode.description());
-        this.errorCode = errorCode;
-        this.details = null;
-    }
-
-    public ValidationException(ValidationErrorCode errorCode, String details) {
-        super(details == null || details.isBlank()
+    public ValidationException(ValidationErrorCode errorCode, String... args) {
+        super(args == null || args.length == 0
                 ? errorCode.description()
-                : errorCode.description() + " - " + details);
+                : errorCode.format((Object) args));
         this.errorCode = errorCode;
-        this.details = details;
+        this.args = args;
     }
 
     public ValidationErrorCode getErrorCode() {
         return errorCode;
     }
 
-    public String getDetails() {
-        return details;
-    }
+    public Object[] getArgs() { return args; }
+
 }
