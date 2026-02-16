@@ -34,14 +34,32 @@ The library is designed following **Hexagonal Architecture** principles, focusin
 
 ---
 
+## Dependencies
+
+This project intentionally uses a minimal set of dependencies:
+
+- **SLF4J** – Logging abstraction
+- **JUnit Jupiter** – Unit testing framework
+- **Mockito** – Test doubles for isolating providers
+- **JaCoCo** – Code coverage reporting
+
+
+---
 ## Installation
+
+### Requirements
+
+- Java 21
+- Maven 3.9+
+- Docker (optional)
+
 
 ### Maven
 
 ```xml
 <dependency>
-  <groupId>com.library</groupId>
-  <artifactId>notifications-lib</artifactId>
+  <groupId>com.library.notifications</groupId>
+  <artifactId>notification-lib</artifactId>
   <version>1.0.0</version>
 </dependency>
 ```

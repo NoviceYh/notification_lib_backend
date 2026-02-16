@@ -6,6 +6,8 @@ import com.library.notifications.api.model.EmailPayload;
 import com.library.notifications.api.model.Provider;
 import com.library.notifications.api.model.Recipient;
 import com.library.notifications.core.port.EmailProviderPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.List;
@@ -16,6 +18,7 @@ import static com.library.notifications.api.exception.error.DeliveryErrorCode.PR
 
 public class SendGridEmailAdapter implements EmailProviderPort {
 
+    private static final Logger logger = LoggerFactory.getLogger(SendGridEmailAdapter.class);
     private final SendGridConfig config;
 
     public SendGridEmailAdapter(SendGridConfig config) {
@@ -39,6 +42,11 @@ public class SendGridEmailAdapter implements EmailProviderPort {
 
         // Simulate a provider message ID
         String providerMessageId = "sg-" + UUID.randomUUID();
+
+        logger.debug(
+                "Sendgrid email sent successfully. providerMessageId={}",
+                providerMessageId
+        );
 
         return DeliveryResult.success(
                 Provider.SENDGRID.name(),

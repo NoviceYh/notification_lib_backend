@@ -6,6 +6,8 @@ import com.library.notifications.api.model.EmailPayload;
 import com.library.notifications.api.model.Provider;
 import com.library.notifications.api.model.Recipient;
 import com.library.notifications.core.port.EmailProviderPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.List;
@@ -16,6 +18,7 @@ import static com.library.notifications.api.exception.error.DeliveryErrorCode.PR
 
 public class MailgunEmailAdapter implements EmailProviderPort {
 
+    private static final Logger logger = LoggerFactory.getLogger(MailgunEmailAdapter.class);
     private final MailgunConfig config;
 
     public MailgunEmailAdapter(MailgunConfig config) {
@@ -30,6 +33,11 @@ public class MailgunEmailAdapter implements EmailProviderPort {
 
         // Simulate a provider message ID
         String providerMessageId = "mg-" + UUID.randomUUID();
+
+        logger.debug(
+                "Mailgun email sent successfully. providerMessageId={}",
+                providerMessageId
+        );
 
         return DeliveryResult.success(
                 Provider.MAILGUN.name(),

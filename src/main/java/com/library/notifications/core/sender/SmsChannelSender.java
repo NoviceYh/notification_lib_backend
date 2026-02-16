@@ -5,6 +5,8 @@ import com.library.notifications.api.exception.ValidationException;
 import com.library.notifications.api.model.*;
 import com.library.notifications.core.port.SmsProviderPort;
 import com.library.notifications.core.validation.SmsValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -13,6 +15,7 @@ import static com.library.notifications.api.exception.error.ValidationErrorCode.
 
 public class SmsChannelSender implements ChannelSender{
 
+    private static final Logger logger = LoggerFactory.getLogger(SmsChannelSender.class);
     private final SmsProviderPort smsProvider;
     private final SmsValidator validator;
 
@@ -32,17 +35,22 @@ public class SmsChannelSender implements ChannelSender{
             throw new ValidationException(REQUEST_NULL);
         }
         if (request.channel() != Channel.SMS) {
-            throw new ValidationException(INVALID_CHANNEL, Channel.SMS.name(), request.channel().name());
+            String value = request.channel() == null ? "null" : request.channel().name();
+            throw new ValidationException(INVALID_CHANNEL, Channel.SMS.name(), value);
         }
 
         SmsPayload payload = extractSmsPayload(request);
         validator.validate(request.recipients(), payload);
 
         try {
+            logger.debug("Sending SMS: recipientsCount={}, messageLength={}",
+                    request.recipients().size(),
+                    payload.message() == null ? 0 : payload.message().length());
             return smsProvider.send(request.recipients(), payload);
         } catch (DeliveryException e) {
             throw e;
         } catch (Exception e) {
+            logger.error("Unexpected error sending Sms", e);
             throw new DeliveryException(UNEXPECTED_ERROR, e);
         }
     }

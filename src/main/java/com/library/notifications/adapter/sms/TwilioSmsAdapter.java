@@ -6,6 +6,8 @@ import com.library.notifications.api.model.Provider;
 import com.library.notifications.api.model.Recipient;
 import com.library.notifications.api.model.SmsPayload;
 import com.library.notifications.core.port.SmsProviderPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.List;
@@ -16,6 +18,7 @@ import static com.library.notifications.api.exception.error.DeliveryErrorCode.PR
 
 public class TwilioSmsAdapter implements SmsProviderPort {
 
+    private static final Logger logger = LoggerFactory.getLogger(TwilioSmsAdapter.class);
     private final TwilioConfig config;
 
     public TwilioSmsAdapter(TwilioConfig config) {
@@ -43,6 +46,11 @@ public class TwilioSmsAdapter implements SmsProviderPort {
 
         // Simulate a provider message ID
         String providerMessageId = "tw-" + UUID.randomUUID();
+
+        logger.debug(
+                "Twilio sms sent successfully. providerMessageId={}",
+                providerMessageId
+        );
 
         return DeliveryResult.success(
                 Provider.TWILIO.name(),

@@ -32,9 +32,10 @@ public enum ValidationErrorCode {
 
     // === Push validation errors ===
     PUSH_RECIPIENT_NULL_OR_BLANK("NVP-0001", "Push recipient cannot be null or empty"),
-    PUSH_PAYLOAD_INVALID("NVP-0002", "The Push payload cannot be null"),
+    PUSH_PAYLOAD_EMPTY("NVP-0002", "The Push payload cannot be null"),
     PUSH_TITLE_EMPTY("NVP-0003", "The Push title cannot be empty"),
-    PUSH_MESSAGE_EMPTY("NVP-0004", "The Push message cannot be empty");
+    PUSH_MESSAGE_EMPTY("NVP-0004", "The Push message cannot be empty"),
+    PUSH_PAYLOAD_INVALID("NVP-0005", "The Push payload is invalid or null. Expected type: PushPayload, but received: %s");
 
     private final String code;
     private final String description;

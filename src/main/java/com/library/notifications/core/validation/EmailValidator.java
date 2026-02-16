@@ -11,6 +11,13 @@ import static com.library.notifications.api.exception.error.ValidationErrorCode.
 
 public class EmailValidator {
 
+    /**
+     * Regular expression pattern for validating email addresses.
+     * This pattern checks for a basic structure of an email address, including:
+     * - Local part: allows letters, digits, and certain special characters.
+     * - "@" symbol separating local and domain parts.
+     * - Domain part: allows letters, digits, hyphens, and dots, with a valid TLD.
+     */
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 

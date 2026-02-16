@@ -6,6 +6,8 @@ import com.library.notifications.api.model.Provider;
 import com.library.notifications.api.model.PushPayload;
 import com.library.notifications.api.model.Recipient;
 import com.library.notifications.core.port.PushProviderPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.List;
@@ -16,6 +18,7 @@ import static com.library.notifications.api.exception.error.DeliveryErrorCode.PR
 
 public class FirebasePushAdapter implements PushProviderPort {
 
+    private static final Logger logger = LoggerFactory.getLogger(FirebasePushAdapter.class);
     private final FirebaseConfig config;
 
     public FirebasePushAdapter(FirebaseConfig config) {
@@ -43,6 +46,11 @@ public class FirebasePushAdapter implements PushProviderPort {
 
         // Simulate a provider message ID
         String providerMessageId = "fb-" + UUID.randomUUID();
+
+        logger.debug(
+                "Firebase push sent successfully. providerMessageId={}",
+                providerMessageId
+        );
 
         return DeliveryResult.success(
                 Provider.FIREBASE.name(),

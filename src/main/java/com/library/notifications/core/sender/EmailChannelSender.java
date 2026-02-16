@@ -8,6 +8,8 @@ import com.library.notifications.api.model.EmailPayload;
 import com.library.notifications.api.model.NotificationRequest;
 import com.library.notifications.core.port.EmailProviderPort;
 import com.library.notifications.core.validation.EmailValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -16,6 +18,7 @@ import static com.library.notifications.api.exception.error.ValidationErrorCode.
 
 public class EmailChannelSender implements ChannelSender {
 
+    private static final Logger logger = LoggerFactory.getLogger(EmailChannelSender.class);
     private final EmailProviderPort emailProvider;
     private final EmailValidator validator;
 
@@ -31,26 +34,27 @@ public class EmailChannelSender implements ChannelSender {
 
     @Override
     public DeliveryResult send(NotificationRequest request) {
-        // 1) Validaciones “comunes” de request (canal, recipients, etc.)
         if (request == null) {
             throw new ValidationException(REQUEST_NULL);
         }
         if (request.channel() != Channel.EMAIL) {
-            throw new ValidationException(INVALID_CHANNEL, Channel.EMAIL.name(), request.channel().name());
+            String value = request.channel() == null ? "null" : request.channel().name();
+            throw new ValidationException(INVALID_CHANNEL, Channel.EMAIL.name(), value);
         }
 
-        // 2) Validación y casteo del payload
         EmailPayload payload = extractEmailPayload(request);
-
-        // 3) Validaciones de negocio (subject/body, emails, etc.)
         validator.validate(request.recipients(), payload);
 
-        // 4) Envío usando el PORT (hexagonal)
         try {
+            logger.debug("Sending email: recipientsCount={}, subjectLength={}, bodyLength={}",
+                    request.recipients().size(),
+                    payload.subject() == null ? 0 : payload.subject().length(),
+                    payload.body() == null ? 0 : payload.body().length());
             return emailProvider.send(request.recipients(), payload);
         } catch (DeliveryException e) {
             throw e;
         } catch (Exception e) {
+            logger.error("Unexpected error sending Email", e);
             throw new DeliveryException(UNEXPECTED_ERROR, e);
         }
     }
