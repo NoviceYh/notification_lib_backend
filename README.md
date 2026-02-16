@@ -131,6 +131,7 @@ builder.useFirebasePush(
 
 _Push providers are modeled as adapters.
 The core library only handles validation and orchestration, keeping provider-specific concerns isolated._
+
 ---
 ### Asynchronous Notifications
 
