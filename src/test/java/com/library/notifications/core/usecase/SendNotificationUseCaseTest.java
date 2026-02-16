@@ -76,7 +76,7 @@ class SendNotificationUseCaseTest {
                 () -> useCase.send(request)
         );
 
-        assertEquals(INVALID_CHANNEL, ex.getErrorCode());
+        assertEquals(EMPTY_CHANNEL, ex.getErrorCode());
     }
 
     @Test

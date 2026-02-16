@@ -3,6 +3,7 @@ package com.library.notifications.adapter.email;
 import com.library.notifications.api.exception.DeliveryException;
 import com.library.notifications.api.model.DeliveryResult;
 import com.library.notifications.api.model.EmailPayload;
+import com.library.notifications.api.model.Provider;
 import com.library.notifications.api.model.Recipient;
 import com.library.notifications.core.port.EmailProviderPort;
 
@@ -28,9 +29,9 @@ public class SendGridEmailAdapter implements EmailProviderPort {
         }
 
         // Simulate provider rejection (e.g. rate limit or blocked recipient)
-        if (recipients.size() > 50) {
+        if (recipients != null && !recipients.isEmpty() && recipients.size() > 50) {
             return DeliveryResult.failed(
-                    "sendgrid",
+                    Provider.SENDGRID.name(),
                     Instant.now(),
                     "rate limited by provider"
             );
@@ -40,7 +41,7 @@ public class SendGridEmailAdapter implements EmailProviderPort {
         String providerMessageId = "sg-" + UUID.randomUUID();
 
         return DeliveryResult.success(
-                "sendgrid",
+                Provider.SENDGRID.name(),
                 providerMessageId,
                 Instant.now()
         );

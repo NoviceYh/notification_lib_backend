@@ -3,6 +3,7 @@ package com.library.notifications.adapter.email;
 import com.library.notifications.api.exception.DeliveryException;
 import com.library.notifications.api.model.DeliveryResult;
 import com.library.notifications.api.model.EmailPayload;
+import com.library.notifications.api.model.Provider;
 import com.library.notifications.api.model.Recipient;
 import com.library.notifications.core.port.EmailProviderPort;
 
@@ -18,7 +19,7 @@ public class MailgunEmailAdapter implements EmailProviderPort {
     private final MailgunConfig config;
 
     public MailgunEmailAdapter(MailgunConfig config) {
-        this.config = Objects.requireNonNull(config, "config es obligatoria");
+        this.config = Objects.requireNonNull(config, "config is required");
     }
 
     @Override
@@ -31,7 +32,7 @@ public class MailgunEmailAdapter implements EmailProviderPort {
         String providerMessageId = "mg-" + UUID.randomUUID();
 
         return DeliveryResult.success(
-                "mailgun",
+                Provider.MAILGUN.name(),
                 providerMessageId,
                 Instant.now()
         );

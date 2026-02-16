@@ -2,6 +2,7 @@ package com.library.notifications.adapter.push;
 
 import com.library.notifications.api.exception.DeliveryException;
 import com.library.notifications.api.model.DeliveryResult;
+import com.library.notifications.api.model.Provider;
 import com.library.notifications.api.model.PushPayload;
 import com.library.notifications.api.model.Recipient;
 import com.library.notifications.core.port.PushProviderPort;
@@ -31,9 +32,10 @@ public class FirebasePushAdapter implements PushProviderPort {
         }
 
         // Simulate rejected device token (not registered / expired)
-        if (recipients.stream().anyMatch(r -> r.value().contains("expired"))) {
+        if (recipients != null && !recipients.isEmpty() &&
+                recipients.stream().anyMatch(r -> r.value().contains("expired"))) {
             return DeliveryResult.failed(
-                    "firebase",
+                    Provider.FIREBASE.name(),
                     Instant.now(),
                     "registration token not registered"
             );
@@ -43,7 +45,7 @@ public class FirebasePushAdapter implements PushProviderPort {
         String providerMessageId = "fb-" + UUID.randomUUID();
 
         return DeliveryResult.success(
-                "firebase",
+                Provider.FIREBASE.name(),
                 providerMessageId,
                 Instant.now()
         );

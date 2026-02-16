@@ -232,6 +232,9 @@ The architecture explicitly distinguishes between validation errors and provider
 Mockito currently relies on Byte Buddy self-attachment for inline mocking.
 Future versions of the JDK may restrict this behavior, so configuring the Java agent explicitly in the build is recommended for long-term compatibility.
 
+Coverage report: 
+run ```mvn clean test``` and open ```target/site/jacoco/index.html.```
+
 ---
 ### Extensibility
 

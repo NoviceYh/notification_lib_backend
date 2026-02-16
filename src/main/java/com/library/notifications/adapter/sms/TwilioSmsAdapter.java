@@ -2,6 +2,7 @@ package com.library.notifications.adapter.sms;
 
 import com.library.notifications.api.exception.DeliveryException;
 import com.library.notifications.api.model.DeliveryResult;
+import com.library.notifications.api.model.Provider;
 import com.library.notifications.api.model.Recipient;
 import com.library.notifications.api.model.SmsPayload;
 import com.library.notifications.core.port.SmsProviderPort;
@@ -31,9 +32,10 @@ public class TwilioSmsAdapter implements SmsProviderPort {
         }
 
         // Simulate provider rejection (e.g. destination not reachable)
-        if (recipients.stream().anyMatch(r -> r.value().endsWith("000"))) {
+        if (recipients != null && !recipients.isEmpty() &&
+                recipients.stream().anyMatch(r -> r.value().endsWith("000"))) {
             return DeliveryResult.failed(
-                    "twilio",
+                    Provider.TWILIO.name(),
                     Instant.now(),
                     "destination not reachable"
             );
@@ -43,7 +45,7 @@ public class TwilioSmsAdapter implements SmsProviderPort {
         String providerMessageId = "tw-" + UUID.randomUUID();
 
         return DeliveryResult.success(
-                "twilio",
+                Provider.TWILIO.name(),
                 providerMessageId,
                 Instant.now()
         );

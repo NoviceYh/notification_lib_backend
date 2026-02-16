@@ -84,7 +84,7 @@ class SmsChannelSenderTest {
         NotificationRequest request = new NotificationRequest(Channel.SMS, recipients, null);
 
         ValidationException ex = assertThrows(ValidationException.class, () -> smsChannelSender.send(request));
-        assertEquals(ValidationErrorCode.SMS_PAYLOAD_INVALID, ex.getErrorCode());
+        assertEquals(ValidationErrorCode.SMS_PAYLOAD_EMPTY, ex.getErrorCode());
         verifyNoInteractions(smsValidator, smsProviderPort);
     }
 

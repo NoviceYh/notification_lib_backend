@@ -8,12 +8,18 @@ public class ValidationException extends RuntimeException {
     private final String[] args;
 
     public ValidationException(ValidationErrorCode errorCode, String... args) {
-        super(args == null || args.length == 0
-                ? errorCode.description()
-                : errorCode.format((Object) args));
+        super(buildMessage(errorCode, args));
         this.errorCode = errorCode;
         this.args = args;
     }
+
+    private static String buildMessage(ValidationErrorCode errorCode, String[] args) {
+        if (args == null || args.length == 0) {
+            return errorCode.description();
+        }
+        return errorCode.format(args);
+    }
+
 
     public ValidationErrorCode getErrorCode() {
         return errorCode;
